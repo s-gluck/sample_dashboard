@@ -1,0 +1,75 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(reactable)
+library(tidyverse)
+library(ggplot2)
+
+theme_set(theme_minimal(15))
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Scatterplot
+
+```{r, fig.width = 12, fig.cap = "Awesome Caption"}
+
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point(aes(color = Species), size = 2) + 
+  geom_smooth(color = "Purple", 
+              fill = "Cornflowerblue") +
+  scale_color_brewer(palette = "Dark2") + 
+  theme(legend.position = "bottom")
+  
+
+
+#paleteer pacakage for all the plot palette collection 
+```
+
+
+### Table 
+
+```{r}
+reactable(iris)
+```
+
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Bar chart
+
+```{r}
+
+
+
+iris %>% 
+  group_by(Species) %>% 
+  count(Species) %>% 
+  mutate(Speies = fct_reorder(Species, n)) %>% 
+  ggplot(aes(Species, n)) +
+  geom_col() + 
+  coord_flip()
+
+
+```
+
+iris %>% 
+  group_by(Species) %>% 
+  summarize(mean_sepal_length = mean(Sepal.Length)) %>% 
+  ungroup() %>% 
+  count(Species) %>% 
+  mutate(Speies = fct_reorder(Species, mean_sepal_length)) %>% 
+  ggplot(aes(Species, mean_sepal_length)) +
+  geom_col() + 
+  coord_flip()
