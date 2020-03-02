@@ -1,9 +1,10 @@
 ---
-title: "Untitled"
+title: "a sample flex dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    theme: flatly
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +17,21 @@ theme_set(theme_minimal(15))
 
 ```
 
-Column {data-width=650}
+
+Sidebar Title {.sidebar}
+==========================================
+
+Using equal signs instead of dashes will place the sidebar globally. Global sidebar needs to come before the first page you have (iris in our case)
+
+
+Your text here. You can use markdown syntax, including 
+[links](http://blah.com), *italics*, **bolding**, etc.
+
+Sidebar text here 
+
+# iris {data-icon="fa-seedling"}
+
+Column {.tabset data-width=650}
 -----------------------------------------------------------------------
 
 ### Scatterplot
@@ -73,3 +88,51 @@ iris %>%
   ggplot(aes(Species, mean_sepal_length)) +
   geom_col() + 
   coord_flip()
+
+# mtcars {data-icon="fa-car"}
+
+Column {data-width =500}
+-----------------------------------------------------------------------
+
+### Scatterplot
+
+```{r}
+ggplot(mtcars, aes(disp, mpg)) + 
+  geom_point(aes(color = factor(carb))) + 
+  geom_smooth() + 
+  theme(legend.position = "bottom") + 
+  labs(x = "Engine Displacement", 
+       y = "MPG") + 
+  scale_color_brewer(palette = "Set2")
+```
+
+
+### Table 
+
+```{r}
+reactable(mtcars)
+```
+
+
+Column {data-width =500}
+-----------------------------------------------------------------------
+
+### Bar chart
+
+```{r}
+p <- mtcars %>% 
+  rownames_to_column("car") %>% 
+  as_tibble() %>% 
+  group_by(cyl) %>% 
+  summarize(mean_mpg = mean(mpg)) %>% 
+  ggplot(aes(factor(cyl), mean_mpg)) +
+  geom_col(aes(fill = "pink")) + 
+  coord_flip()
+
+
+plotly::ggplotly(p)
+
+```
+
+# more stuff {data-icon="fa-tree"}
+
